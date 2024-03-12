@@ -1,0 +1,75 @@
+.editor {
+    width: 100%;
+    height: 100%;
+    &-left, &-right {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 250px;
+    }
+    &-left {
+        left: 0;
+        background-color: rgb(58, 94, 96);
+        &-content {
+            width: 200px;
+            margin: 10px auto;
+            &-item {
+                position: relative;
+                width: 200px;
+                height: 200px;
+                padding: 10px;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px #999999 solid;
+                color: #ffff;
+                cursor: move;
+                user-select: none;
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    z-index: 5;
+                }
+                .label {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding: 6px;
+                    background-color: cadetblue;
+                }
+            }
+        }
+    }
+    &-right {
+        right: 0;
+        background-color: brown;
+    }
+    &-top {
+        position: absolute;
+        left: 260px;
+        right: 260px;
+        height: 90px;
+        background-color: burlywood;
+    }
+    &-container {
+        padding: 100px 260px 10px;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        &-content {
+            height: 100%;
+            overflow: auto;
+            &_canvas {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                background-color: chocolate;
+            }
+        }
+    }
+}
