@@ -73,3 +73,22 @@
         }
     }
 }
+
+.editor-block {
+    position: absolute;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 5;
+    }
+}
+
+.editor-block-focus {
+    &::before {
+        border: 2px dashed red;
+    }
+}

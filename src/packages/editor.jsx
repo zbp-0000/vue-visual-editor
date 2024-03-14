@@ -2,6 +2,7 @@ import { computed, defineComponent, inject, ref } from "vue";
 import "./editor.scss";
 import EditorBlock from './editor-block'
 import { useMenuDrag } from './useMenuDrag'
+import { useBlockFocus } from './useBlockFocus'
 
 export default defineComponent({
     props: {
@@ -22,6 +23,10 @@ export default defineComponent({
         const config = inject('config')
         const containerRef = ref(null)
         const { handleDragstart, handleDragEnd } = useMenuDrag(containerRef, data)
+
+        const { blockMousedwn, clearBlockFocus, foucsData } = useBlockFocus(data, (e) => {
+            console.log(foucsData.value.focus);
+        })
 
         return () => (
             <div className="editor">
@@ -47,9 +52,13 @@ export default defineComponent({
                         <div className="editor-container-content_canvas"
                             style={containerStyle}
                             ref={containerRef}
+                            onClick={clearBlockFocus}
                         >
                             {data.value.blocks.map(block => (
-                                <EditorBlock block={block} />
+                                <EditorBlock
+                                    block={block}
+                                    onClick={e => blockMousedwn(e, block)} 
+                                    class={block.focus ? 'editor-block-focus' : ''} />
                             ))}
                         </div>
                     </div>
