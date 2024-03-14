@@ -3,6 +3,7 @@ import "./editor.scss";
 import EditorBlock from './editor-block'
 import { useMenuDrag } from './useMenuDrag'
 import { useBlockFocus } from './useBlockFocus'
+import { useBlockDrag } from "./useBlockDrag";
 
 export default defineComponent({
     props: {
@@ -22,11 +23,17 @@ export default defineComponent({
         })
         const config = inject('config')
         const containerRef = ref(null)
+
+        // 实现菜单拖拽
         const { handleDragstart, handleDragEnd } = useMenuDrag(containerRef, data)
 
+        // 实现组件聚焦
         const { blockMousedwn, clearBlockFocus, foucsData } = useBlockFocus(data, (e) => {
-            console.log(foucsData.value.focus);
+            mouseDown(e)
         })
+
+        // 实现组件拖拽
+        const { mouseDown } = useBlockDrag(foucsData)
 
         return () => (
             <div className="editor">
@@ -52,12 +59,12 @@ export default defineComponent({
                         <div className="editor-container-content_canvas"
                             style={containerStyle}
                             ref={containerRef}
-                            onClick={clearBlockFocus}
+                            onMousedown={clearBlockFocus}
                         >
                             {data.value.blocks.map(block => (
                                 <EditorBlock
                                     block={block}
-                                    onClick={e => blockMousedwn(e, block)} 
+                                    onMousedown={e => blockMousedwn(e, block)} 
                                     class={block.focus ? 'editor-block-focus' : ''} />
                             ))}
                         </div>
