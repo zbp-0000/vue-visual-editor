@@ -9,10 +9,10 @@ export function useBlockFocus (data, callback) {
     const blockMousedwn = (e, block) => {
         e.stopPropagation()
         e.preventDefault()
-        if(e.shiftKey) {
+        if (e.shiftKey) {
             block.focus = !block.focus
         } else {
-            if(block.focus) {
+            if (block.focus) {
                 block.focus = false
             } else {
                 clearBlockFocus()

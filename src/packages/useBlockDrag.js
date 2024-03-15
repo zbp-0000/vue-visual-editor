@@ -1,4 +1,4 @@
-export function useBlockDrag(foucsData) {
+export function useBlockDrag (foucsData) {
     let dragState = {
         startY: 0,
         startX: 0,
@@ -10,13 +10,13 @@ export function useBlockDrag(foucsData) {
             startY: e.clientY,
             startX: e.clientX,
             // 记录每个选中的元素的位置，方便后续计算
-            startPosition: foucsData.value.focus.map(({left, top}) => ({left, top}))
+            startPosition: foucsData.value.focus.map(({ left, top }) => ({ left, top }))
         }
         document.addEventListener('mousemove', mouseMove)
         document.addEventListener('mouseup', mouseUp)
     }
     const mouseMove = (e) => {
-        const { clientX:moveX, clientY:moveY } = e
+        const { clientX: moveX, clientY: moveY } = e
         const dragX = moveX - dragState.startX
         const dragY = moveY - dragState.startY
         // 因为foucsData是一个计算属性获取到的值，所以直接修改，props可以代理数据
