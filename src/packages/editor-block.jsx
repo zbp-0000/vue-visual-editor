@@ -16,11 +16,13 @@ export default defineComponent({
         const blockRef = ref(null)
         onMounted(() => {
             let { offsetWidth,offsetHeight } = blockRef.value
-            if(props.block.alignCenter) {
+            if(props.block.alignCenter) { // 说明拖拽松手的时候才渲染，其他的默认渲染到页面上
                 props.block.left = props.block.left - offsetWidth / 2
                 props.block.top = props.block.top - offsetHeight / 2
-                props.block.alignCenter = false
+                props.block.alignCenter = false // 让渲染后的结果才能去居中
             }
+            props.block.width = offsetWidth
+            props.block.height = offsetHeight
         })
         // 通过key 拿到对应的组件
         const component = config.componentMap[props.block.key]

@@ -1,3 +1,8 @@
+/**
+ * 实现菜单拖拽到画布
+ * @param {ElementRef} containerRef dom元素
+ * @param {Object} data 已经注册的菜单组件数据 
+ */
 export function useMenuDrag (containerRef, data) {
     let currentComponent
     const handleDragstart = (e, component) => {

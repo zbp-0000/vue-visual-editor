@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref } from "vue";
+import { computed, defineComponent, inject, ref, watchEffect } from "vue";
 import "./editor.scss";
 import EditorBlock from './editor-block'
 import { useMenuDrag } from './useMenuDrag'
@@ -28,12 +28,16 @@ export default defineComponent({
         const { handleDragstart, handleDragEnd } = useMenuDrag(containerRef, data)
 
         // 实现组件聚焦
-        const { blockMousedwn, clearBlockFocus, foucsData } = useBlockFocus(data, (e) => {
+        const { blockMousedwn, clearBlockFocus, foucsData, laseSelectBlock } = useBlockFocus(data, (e) => {
             mouseDown(e)
         })
 
         // 实现组件拖拽
-        const { mouseDown } = useBlockDrag(foucsData)
+        const { mouseDown, markLine } = useBlockDrag(foucsData, laseSelectBlock, data)
+
+        watchEffect(() => {
+            console.log('markLine');
+        })
 
         return () => (
             <div className="editor">
@@ -55,18 +59,22 @@ export default defineComponent({
                 <div className="editor-top"></div>
                 <div className="editor-right"></div>
                 <div className="editor-container">
+                    {/* 负责产生滚动条 */}
                     <div className="editor-container-content">
+                        {/* 内容区域 */}
                         <div className="editor-container-content_canvas"
                             style={containerStyle}
                             ref={containerRef}
                             onMousedown={clearBlockFocus}
                         >
-                            {data.value.blocks.map(block => (
+                            {data.value.blocks.map((block, index) => (
                                 <EditorBlock
                                     block={block}
-                                    onMousedown={e => blockMousedwn(e, block)} 
+                                    onMousedown={e => blockMousedwn(e, block, index)}
                                     class={block.focus ? 'editor-block-focus' : ''} />
                             ))}
+                            {markLine.x !== null && <div className="line-x" style={{ left: markLine.value.x + 'px' }}></div>}
+                            {markLine.y !== null && <div className="line-y" style={{ top: markLine.value.y + 'px' }}></div>}
                         </div>
                     </div>
                 </div>

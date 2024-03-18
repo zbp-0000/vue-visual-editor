@@ -1,12 +1,21 @@
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+/**
+ * 获取哪些对象被选中了
+ * @param {Object} data 已有的菜单数据
+ * @param {callback} callback 回调函数 
+ */
 export function useBlockFocus (data, callback) {
+    const selectIndex = ref(-1) // 当前被选中的block的索引
+    const laseSelectBlock = computed(() => data.value.blocks[selectIndex.value])
+
     const clearBlockFocus = () => {
         data.value.blocks.forEach(block => {
             block.focus = false
         });
+        selectIndex.value = -1
     }
 
-    const blockMousedwn = (e, block) => {
+    const blockMousedwn = (e, block, idx) => {
         e.stopPropagation()
         e.preventDefault()
         // block上我们规划一个属性，focus 获取焦点后就将focus变为true
@@ -20,6 +29,7 @@ export function useBlockFocus (data, callback) {
                 block.focus = true
             }
         }
+        selectIndex.value = idx
         callback(e)
     }
 
@@ -37,6 +47,7 @@ export function useBlockFocus (data, callback) {
     return {
         clearBlockFocus,
         blockMousedwn,
-        foucsData
+        foucsData,
+        laseSelectBlock
     }
 }
