@@ -9,12 +9,13 @@ export function useBlockFocus (data, callback) {
     const blockMousedwn = (e, block) => {
         e.stopPropagation()
         e.preventDefault()
+        // block上我们规划一个属性，focus 获取焦点后就将focus变为true
         if (e.shiftKey) {
-            block.focus = !block.focus
+            // 当前只有一个节点被选中时，按住shift，也不会focus
+            if (foucsData.value.focus.length <= 1) block.focus = true;
+            else block.focus = !block.focus
         } else {
-            if (block.focus) {
-                block.focus = false
-            } else {
+            if (!block.focus) {
                 clearBlockFocus()
                 block.focus = true
             }
