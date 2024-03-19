@@ -35,10 +35,6 @@ export default defineComponent({
         // 实现组件拖拽
         const { mouseDown, markLine } = useBlockDrag(foucsData, laseSelectBlock, data)
 
-        watchEffect(() => {
-            console.log('markLine');
-        })
-
         return () => (
             <div className="editor">
                 <div className="editor-left">
@@ -73,8 +69,8 @@ export default defineComponent({
                                     onMousedown={e => blockMousedwn(e, block, index)}
                                     class={block.focus ? 'editor-block-focus' : ''} />
                             ))}
-                            {markLine.x !== null && <div className="line-x" style={{ left: markLine.value.x + 'px' }}></div>}
-                            {markLine.y !== null && <div className="line-y" style={{ top: markLine.value.y + 'px' }}></div>}
+                            {markLine.value.x !== null && <div className="line-x" style={{ left: markLine.value.x + 'px' }}></div>}
+                            {markLine.value.y !== null && <div className="line-y" style={{ top: markLine.value.y + 'px' }}></div>}
                         </div>
                     </div>
                 </div>

@@ -26,6 +26,7 @@ export function useBlockDrag (foucsData, laseSelectBlock, data) {
             startTop: laseSelectBlock.value.top,
             // 记录每个选中的元素的位置，方便后续计算
             startPosition: foucsData.value.focus.map(({ left, top }) => ({ left, top })),
+            // TODO 居中整个盒子，需要把data.container 中的 width height 拿过来 push到unfocused
             lines: (() => {
                 const { unfocused } = foucsData.value // 获取其他没选中的以他们的位置作为辅助线
                 let lines = { x: [], y: [] } // 计算横线的位置用y来存，x存的是纵向
@@ -40,7 +41,7 @@ export function useBlockDrag (foucsData, laseSelectBlock, data) {
 
                     lines.x.push({ showLeft: ALeft, left: ALeft }) // 左对左
                     lines.x.push({ showLeft: ALeft + AWidth, left: ALeft + AWidth }) // 右对左
-                    lines.x.push({ showLeft: ALeft + AWidth / 2, left: ALeft + AWidth / 2 } - BWidth / 2) // 中间最齐
+                    lines.x.push({ showLeft: ALeft + AWidth / 2, left: ALeft + AWidth / 2 - BWidth / 2 }) // 中间最齐
                     lines.x.push({ showLeft: ALeft + AWidth, left: ALeft + AWidth - BWidth }) // 右对左
                     lines.x.push({ showLeft: ALeft, left: ALeft - BWidth })
                 });
