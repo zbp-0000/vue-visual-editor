@@ -29,8 +29,13 @@ export function useBlockDrag (foucsData, laseSelectBlock, data) {
             // TODO 居中整个盒子，需要把data.container 中的 width height 拿过来 push到unfocused
             lines: (() => {
                 const { unfocused } = foucsData.value // 获取其他没选中的以他们的位置作为辅助线
-                let lines = { x: [], y: [] } // 计算横线的位置用y来存，x存的是纵向
-                unfocused.forEach(block => {
+                let lines = { x: [], y: [] }; // 计算横线的位置用y来存，x存的是纵向
+                [...unfocused, {
+                    top: 0,
+                    left: 0,
+                    width: data.value.container.width,
+                    height: data.value.container.height
+                }].forEach((block) => {
                     const { top: ATop, left: ALeft, width: AWidth, height: AHeight } = block
                     // 当此元素(laseSelectBlock)推拽到于A元素top一致的时候，要显示这根辅助线
                     lines.y.push({ showTop: ATop, top: ATop })

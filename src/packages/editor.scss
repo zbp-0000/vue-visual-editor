@@ -54,13 +54,27 @@
         left: 260px;
         right: 260px;
         height: 90px;
-        background-color: burlywood;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &-button {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0,0,0,0.3);
+            color: #fff;
+            &+& {
+                margin-left: 3px;
+            }
+        }
     }
     &-container {
         padding: 100px 260px 10px;
         width: 100%;
         height: 100%;
-        background-color: black;
         &-content {
             height: 100%;
             overflow: auto;
@@ -68,7 +82,7 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
-                background-color: #fff;
+                background-color: burlywood;
             }
         }
     }

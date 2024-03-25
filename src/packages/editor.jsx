@@ -1,9 +1,13 @@
 import { computed, defineComponent, inject, ref, watchEffect } from "vue";
+// import { RollbackOutlined, RetweetOutlined } from '@ant-design/icons';
+import { RollbackOutlined, RetweetOutlined } from '@ant-design/icons-vue';
+
 import "./editor.scss";
 import EditorBlock from './editor-block'
 import { useMenuDrag } from './useMenuDrag'
 import { useBlockFocus } from './useBlockFocus'
 import { useBlockDrag } from "./useBlockDrag";
+import { useCommand } from "./useCommand";
 
 export default defineComponent({
     props: {
@@ -35,6 +39,21 @@ export default defineComponent({
         // 实现组件拖拽
         const { mouseDown, markLine } = useBlockDrag(foucsData, laseSelectBlock, data)
 
+        const {commads} = useCommand(data)
+        const buttons = [
+            {
+                label: '撤销',
+                icon: <RollbackOutlined style={{fontSize:'26px'}}  />,
+                handler: () => commads.undo()
+            },
+            {
+                label: '重做',
+                icon: <RetweetOutlined  style={{fontSize:'26px'}} />,
+                handler: () => commads.redo()
+            }
+        ]
+
+
         return () => (
             <div className="editor">
                 <div className="editor-left">
@@ -52,7 +71,14 @@ export default defineComponent({
                         ))}
                     </div>
                 </div>
-                <div className="editor-top"></div>
+                <div className="editor-top">
+                    {buttons.map((btn) => (
+                        <div onClick={btn.handler} className="editor-top-button">
+                            {btn.icon}
+                            <span>{btn.label}</span>    
+                        </div>
+                    ))}
+                </div>
                 <div className="editor-right"></div>
                 <div className="editor-container">
                     {/* 负责产生滚动条 */}

@@ -1,3 +1,5 @@
+import { events } from "./events";
+
 /**
  * 实现菜单拖拽到画布
  * @param {ElementRef} containerRef dom元素
@@ -14,14 +16,16 @@ export function useMenuDrag (containerRef, data) {
         containerRef.value.addEventListener("dragleave", dragleave, false);
         // 将拖动的元素到所选择的放置目标节点中
         containerRef.value.addEventListener("drop", drop, false);
-
         currentComponent = component
+
+        events.emit('start') // 发布start方法
     }
     const handleDragEnd = (e) => {
         containerRef.value.removeEventListener("dragenter", dragenter, false);
         containerRef.value.removeEventListener("dragover", dragover, false);
         containerRef.value.removeEventListener("dragleave", dragleave, false);
         containerRef.value.removeEventListener("drop", drop, false);
+        events.emit('end') // 发布end方法
     }
     const dragenter = (e) => {
         e.dataTransfer.dropEffect = 'copy'
