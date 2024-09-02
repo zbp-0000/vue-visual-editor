@@ -39,17 +39,17 @@ export default defineComponent({
         // 实现组件拖拽
         const { mouseDown, markLine } = useBlockDrag(foucsData, laseSelectBlock, data)
 
-        const {commads} = useCommand(data)
+        const { commands } = useCommand(data)
         const buttons = [
             {
                 label: '撤销',
-                icon: <RollbackOutlined style={{fontSize:'26px'}}  />,
-                handler: () => commads.undo()
+                icon: <RollbackOutlined style={{ fontSize: '26px' }} />,
+                handler: () => commands.undo()
             },
             {
                 label: '重做',
-                icon: <RetweetOutlined  style={{fontSize:'26px'}} />,
-                handler: () => commads.redo()
+                icon: <RetweetOutlined style={{ fontSize: '26px' }} />,
+                handler: () => commands.redo()
             }
         ]
 
@@ -75,7 +75,7 @@ export default defineComponent({
                     {buttons.map((btn) => (
                         <div onClick={btn.handler} className="editor-top-button">
                             {btn.icon}
-                            <span>{btn.label}</span>    
+                            <span>{btn.label}</span>
                         </div>
                     ))}
                 </div>

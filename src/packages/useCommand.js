@@ -15,7 +15,7 @@ export function useCommand(data) {
     const registry = (command) => {
         state.commandArray.push(command)
         state.commands[command.name] = () => {
-            const { redo,undo } = command.execute
+            const { redo,undo } = command.execute()
             redo()
             if(!command.pushQueue) { // 不需要放到队列中直接跳过即可
                 return
@@ -32,7 +32,7 @@ export function useCommand(data) {
             }
 
             queue.push({redo,undo})
-            state.current += 1
+            state.current = state.current + 1
         }
     }
 
@@ -44,6 +44,11 @@ export function useCommand(data) {
             return {
                 redo() {
                     console.log('重做');
+                    let item = state.queue[state.current+1] // 找到下一步还原操作
+                    if(item) {
+                        item.redo & item.redo()
+                        state.current++
+                    }
                 }
             }
         }
@@ -55,7 +60,13 @@ export function useCommand(data) {
             return {
                 redo() {
                     console.log('撤销');
-                    if(state.current == -1) return
+                    if(state.current == -1) return // 没有可撤销的了
+                    let item = state.queue[state.current] // 找到上一步还原
+                    console.log('item',item);
+                    if(item) {
+                        item.undo & item.undo()
+                        state.current--
+                    }
                 }
             }
         }
@@ -100,6 +111,5 @@ export function useCommand(data) {
     onUnmounted(() => {
         state.destroyArray.forEach(fn => fn&&fn())
     })
-
     return state
 }
