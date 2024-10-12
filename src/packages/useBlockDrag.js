@@ -1,4 +1,5 @@
 import { ref } from "vue"
+import { events } from "./events"
 /**
  * 实现组件拖拽
  * @param {Object} foucsData 选中的元素 
@@ -58,6 +59,10 @@ export function useBlockDrag (foucsData, laseSelectBlock, data) {
     }
     const mouseMove = (e) => {
         let { clientX: moveX, clientY: moveY } = e
+        if(!dragState.dragging) {
+            dragState.dragging = true
+            events.emit('start') // 触发事件就会记住拖拽前的位置
+        }
 
         // 计算当前元素最新的left和top 去线里面找，找到显示线
         // 鼠标移动后 - 鼠标移动前 + left 就好了
@@ -101,6 +106,9 @@ export function useBlockDrag (foucsData, laseSelectBlock, data) {
         document.removeEventListener('mouseup', mouseUp)
         markLine.value.x = null
         markLine.value.y = null
+        if(dragState.dragging) { // 拖拽结束才触发end, 如果只是点击，不会触发end
+            events.emit('end')
+        }
     }
 
     return {

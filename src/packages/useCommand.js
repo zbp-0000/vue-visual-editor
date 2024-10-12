@@ -55,7 +55,7 @@ export function useCommand(data) {
     })
     registry({
         name: 'undo',
-        keybord: 'ctrl+z',
+        keyboard: 'ctrl+z',
         execute() {
             return {
                 redo() {
@@ -101,8 +101,40 @@ export function useCommand(data) {
         }
     });
 
+    const keyboardEvent = (() => {
+        const keyCodes = {
+            90: 'z',
+            89: 'y'
+        }
+        const onKeyDown = (e) => {
+            const {ctrlKey, keyCode} = e;
+            let keyString = []
+            if(ctrlKey) keyString.push('ctrl')
+            keyString.push(keyCodes[keyCode])
+            keyString = keyString.join('+')
+            state.commandArray.forEach(({keyboard, name}) => {
+                if(!keyboard) return // 没有键盘事件
+                if(keyboard === keyString) {
+                    state.commands[name]();
+                    e.preventDefault();
+                }
+            })
+        }
+        const init = () => {
+            window.addEventListener('keydown', onKeyDown)
+
+            return () => {
+                window.removeEventListener('keydown', onKeyDown)
+            }
+        }
+        return init
+    })()
+
     // 判断哪些有初始化init函数，init函数会返回销毁函数，把销毁函数存起来
     ;(() => {
+        // 监听键盘事件
+        state.destroyArray.push(keyboardEvent())
+
         state.commandArray.forEach(command=>command.init && state.destroyArray.push(command.init()))
     })()
 
