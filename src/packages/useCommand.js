@@ -27,12 +27,12 @@ export function useCommand(data) {
              * 栈里面应该是 组件1 => 组件3
              */
             if(queue.length > 0) {
-                queue.slice(0, current + 1) // 可能在放置过程中有撤销操作，所以根据当前最新的current值来操作
+                queue = queue.slice(0, current + 1) // 可能在放置过程中有撤销操作，所以根据当前最新的current值来操作
                 state.queue = queue
             }
 
             queue.push({redo,undo})
-            state.current = state.current + 1
+            state.current = current + 1
         }
     }
 
@@ -59,7 +59,6 @@ export function useCommand(data) {
         execute() {
             return {
                 redo() {
-                    console.log('撤销');
                     if(state.current == -1) return // 没有可撤销的了
                     let item = state.queue[state.current] // 找到上一步还原
                     console.log('item',item);
@@ -93,10 +92,10 @@ export function useCommand(data) {
             let after = data.value.blocks // 拖拽之后的状态
             return {
                 redo() { // 拖拽默认一松手 就直接把当前事情做了
-                    data.value = {...data.value, block:after}
+                    data.value = {...data.value, blocks: after}
                 },
                 undo() { // 拖拽前一步
-                    data.value = {...data.value, block:before}
+                    data.value = {...data.value, blocks: before}
                 }
             }
         }

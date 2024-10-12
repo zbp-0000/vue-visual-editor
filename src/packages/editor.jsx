@@ -63,7 +63,7 @@ export default defineComponent({
                                 className="editor-left-content-item"
                                 draggable
                                 onDragstart={(e) => handleDragstart(e, item)}
-                                onDragsEnd={(e) => handleDragEnd}
+                                onDragend={(e) => handleDragEnd(e)}
                             >
                                 <span className="label">{item.label}</span>
                                 <div className="com">{item.preview()}</div>
