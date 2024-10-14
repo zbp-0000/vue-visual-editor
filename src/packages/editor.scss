@@ -9,7 +9,8 @@
     }
     &-left {
         left: 0;
-        background-color: rgb(58, 94, 96);
+        color: #000;
+        // background-color: rgb(58, 94, 96);
         &-content {
             width: 200px;
             margin: 10px auto;
@@ -24,6 +25,7 @@
                 justify-content: center;
                 border: 1px #999999 solid;
                 color: #ffff;
+                color: #000;
                 cursor: move;
                 user-select: none;
                 &::before {
@@ -47,7 +49,7 @@
     }
     &-right {
         right: 0;
-        background-color: brown;
+        // background-color: brown;
     }
     &-top {
         position: absolute;
@@ -82,7 +84,7 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
-                background-color: burlywood;
+                // background-color: burlywood;
             }
         }
     }

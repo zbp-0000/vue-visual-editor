@@ -14,8 +14,8 @@ export function useCommand(data) {
 
     const registry = (command) => {
         state.commandArray.push(command)
-        state.commands[command.name] = () => {
-            const { redo,undo } = command.execute()
+        state.commands[command.name] = (...args) => {
+            const { redo,undo } = command.execute(...args)
             redo()
             if(!command.pushQueue) { // 不需要放到队列中直接跳过即可
                 return
@@ -43,7 +43,6 @@ export function useCommand(data) {
         execute() {
             return {
                 redo() {
-                    console.log('重做');
                     let item = state.queue[state.current+1] // 找到下一步还原操作
                     if(item) {
                         item.redo & item.redo()
@@ -61,7 +60,6 @@ export function useCommand(data) {
                 redo() {
                     if(state.current == -1) return // 没有可撤销的了
                     let item = state.queue[state.current] // 找到上一步还原
-                    console.log('item',item);
                     if(item) {
                         item.undo & item.undo()
                         state.current--
@@ -100,6 +98,24 @@ export function useCommand(data) {
             }
         }
     });
+    registry({
+        name: 'updateContainer', // 更新整个容器
+        pushQueue: true,
+        execute(newValue) {
+            let state = {
+                before: data.value, // 当前值
+                after: newValue // 信值
+            }
+            return {
+                redo: () => {
+                    data.value = state.after
+                },
+                undo: () => {
+                    data.value = state.before
+                }
+            }
+        }
+    })
 
     const keyboardEvent = (() => {
         const keyCodes = {

@@ -1,6 +1,5 @@
-import { computed, defineComponent, inject, ref, watchEffect } from "vue";
-// import { RollbackOutlined, RetweetOutlined } from '@ant-design/icons';
-import { RollbackOutlined, RetweetOutlined } from '@ant-design/icons-vue';
+import { computed, defineComponent, inject, ref } from "vue";
+import { RollbackOutlined, RetweetOutlined, CloudUploadOutlined, CloudDownloadOutlined } from '@ant-design/icons-vue';
 
 import "./editor.scss";
 import EditorBlock from './editor-block'
@@ -8,6 +7,7 @@ import { useMenuDrag } from './useMenuDrag'
 import { useBlockFocus } from './useBlockFocus'
 import { useBlockDrag } from "./useBlockDrag";
 import { useCommand } from "./useCommand";
+import { $dialog } from "@/components/Dialog.jsx";
 
 export default defineComponent({
     props: {
@@ -50,6 +50,31 @@ export default defineComponent({
                 label: '重做',
                 icon: <RetweetOutlined style={{ fontSize: '26px' }} />,
                 handler: () => commands.redo()
+            },
+            {
+                label: '导出',
+                icon: <CloudUploadOutlined style={{ fontSize: '26px' }} />,
+                handler: () => {
+                    $dialog({
+                        title: '导出json使用',
+                        content: JSON.stringify(data.value),
+                    })
+                }
+            },
+            {
+                label: '导入',
+                icon: <CloudDownloadOutlined style={{ fontSize: '26px' }} />,
+                handler: () => {
+                    $dialog({
+                        title: '导入json使用',
+                        content: '',
+                        footer: true,
+                        onConfirm(text) {
+                            // data.value = JSON.parse(text) // 这样去更改无法保留历史记录
+                            commands.updateContainer(JSON.parse(text))
+                        }
+                    })
+                }
             }
         ]
 
