@@ -1,8 +1,8 @@
-import { cloneDeep } from 'lodash'
+import { before, cloneDeep } from 'lodash'
 import { onUnmounted } from 'vue'
 import { events } from "./events"
 
-export function useCommand(data) {
+export function useCommand(data, foucsData) {
     const state = {
         // 前进后退需要指针
         current: -1, // 前进后退的索引
@@ -112,6 +112,77 @@ export function useCommand(data) {
                 },
                 undo: () => {
                     data.value = state.before
+                }
+            }
+        }
+    })
+    registry({
+        name: 'placeTop',
+        pushQueue: true,
+        execute() {
+            let before = cloneDeep(data.value.blocks)
+            let after = (() => {
+                // 置顶就在所有的block中找到最大的
+                let { focus, unfocused } = foucsData.value
+                let maxZIndex = unfocused.reduce((prve,block) => {
+                    return Math.max(prve, block.zIndex)
+                }, -Infinity)
+                focus.forEach(block => block.zIndex = maxZIndex + 1) // 让当前选中的比最大的+1即可
+                return data.value.blocks
+            })()
+            return {
+                redo() {
+                    data.value = {...data.value, blocks: after}
+                },
+                undo() {
+                    data.value = {...data.value, blocks: before}
+                }
+            }
+        }
+    })
+    registry({
+        name: 'placeBottom',
+        pushQueue: true,
+        execute() {
+            let before = cloneDeep(data.value.blocks)
+            let after = (() => {
+                let { focus, unfocused } = foucsData.value
+                let minZIndex = unfocused.reduce((prve,block) => {
+                    return Math.min(prve, block.zIndex)
+                }, Infinity) - 1;
+                // 不能直接-1，因为会出现负值，就看不见了
+                if(minZIndex < 0) {
+                    const dur = Math.abs(minZIndex)
+                    minZIndex = 0
+                    unfocused.forEach(block => block.zIndex += dur)
+                }
+                focus.forEach(block => block.zIndex = minZIndex)
+                return data.value.blocks
+            })()
+            return {
+                redo() {
+                    data.value = {...data.value, blocks: after}
+                },
+                undo() {
+                    data.value = {...data.value, blocks: before}
+                }
+            }
+        }
+    })
+    registry({
+        name: 'delete',
+        pushQueue: true,
+        execute() {
+            let state = {
+                before: cloneDeep(data.value.blocks) ,
+                after: foucsData.value.unfocused // 选中的都删除了 留下的就是没选中的
+            }
+            return {
+                redo() {
+                    data.value = {...data.value, blocks: state.after}
+                },
+                undo() {
+                    data.value = {...data.value, blocks: state.before}
                 }
             }
         }

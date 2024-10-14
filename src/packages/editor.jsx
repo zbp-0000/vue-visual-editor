@@ -1,5 +1,13 @@
-import { computed, defineComponent, inject, ref } from "vue";
-import { RollbackOutlined, RetweetOutlined, CloudUploadOutlined, CloudDownloadOutlined } from '@ant-design/icons-vue';
+import { computed, defineComponent, inject, ref, watch } from "vue";
+import { 
+    RollbackOutlined, 
+    RetweetOutlined, 
+    CloudUploadOutlined, 
+    CloudDownloadOutlined, 
+    VerticalAlignTopOutlined, 
+    VerticalAlignBottomOutlined,
+    DeleteOutlined
+} from '@ant-design/icons-vue';
 
 import "./editor.scss";
 import EditorBlock from './editor-block'
@@ -39,21 +47,21 @@ export default defineComponent({
         // 实现组件拖拽
         const { mouseDown, markLine } = useBlockDrag(foucsData, laseSelectBlock, data)
 
-        const { commands } = useCommand(data)
+        const { commands } = useCommand(data, foucsData)
         const buttons = [
             {
                 label: '撤销',
-                icon: <RollbackOutlined style={{ fontSize: '26px' }} />,
+                icon: <RollbackOutlined style={{ fontSize: '20px' }} />,
                 handler: () => commands.undo()
             },
             {
                 label: '重做',
-                icon: <RetweetOutlined style={{ fontSize: '26px' }} />,
+                icon: <RetweetOutlined style={{ fontSize: '20px' }} />,
                 handler: () => commands.redo()
             },
             {
                 label: '导出',
-                icon: <CloudUploadOutlined style={{ fontSize: '26px' }} />,
+                icon: <CloudUploadOutlined style={{ fontSize: '20px' }} />,
                 handler: () => {
                     $dialog({
                         title: '导出json使用',
@@ -63,7 +71,7 @@ export default defineComponent({
             },
             {
                 label: '导入',
-                icon: <CloudDownloadOutlined style={{ fontSize: '26px' }} />,
+                icon: <CloudDownloadOutlined style={{ fontSize: '20px' }} />,
                 handler: () => {
                     $dialog({
                         title: '导入json使用',
@@ -75,6 +83,21 @@ export default defineComponent({
                         }
                     })
                 }
+            },
+            {
+                label: '置顶',
+                icon: <VerticalAlignTopOutlined style={{ fontSize: '20px' }} />,
+                handler: () => commands.placeTop()
+            },
+            {
+                label: '置底',
+                icon: <VerticalAlignBottomOutlined style={{ fontSize: '20px' }} />,
+                handler: () => commands.placeBottom()
+            },
+            {
+                label: '删除',
+                icon: <DeleteOutlined style={{ fontSize: '20px' }} />,
+                handler: () => commands.delete()
             }
         ]
 
