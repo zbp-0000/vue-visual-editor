@@ -1,4 +1,4 @@
-import { computed, defineComponent,inject, onMounted, ref } from "vue";
+import { computed, defineComponent,inject, onMounted, ref, watch } from "vue";
 // 画布区域 每个单独的组件
 export default defineComponent({
     props: {
@@ -24,10 +24,9 @@ export default defineComponent({
             props.block.width = offsetWidth
             props.block.height = offsetHeight
         })
-        // 通过key 拿到对应的组件
-        const component = config.componentMap[props.block.key]
-        return () => (
-            <div style={blockStyle.value} class="editor-block" ref={blockRef}>{component.render()}</div>
-        )
+        return () => {
+            const component = config.componentMap[props.block.key]
+            return <div style={blockStyle.value} class="editor-block" ref={blockRef}>{component.render()}</div>
+        }
     }
 })
