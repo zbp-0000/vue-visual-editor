@@ -127,7 +127,7 @@ export default defineComponent({
                         </div>
                     ))}
                 </div>
-                <div className="editor-right"></div>
+                <div className="editor-right">属性控制栏</div>
                 <div className="editor-container">
                     {/* 负责产生滚动条 */}
                     <div className="editor-container-content">
