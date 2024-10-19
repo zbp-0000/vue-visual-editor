@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
  * @param {Object} data 已有的菜单数据
  * @param {callback} callback 回调函数 
  */
-export function useBlockFocus (data, callback) {
+export function useBlockFocus (data, previewRef, callback) {
     const selectIndex = ref(-1) // 当前被选中的block的索引
     const laseSelectBlock = computed(() => data.value.blocks[selectIndex.value])
 
@@ -12,10 +12,16 @@ export function useBlockFocus (data, callback) {
         data.value.blocks.forEach(block => {
             block.focus = false
         });
+    }
+
+    const containerMousedown = (e) => {
+        if(previewRef.value) return
+        clearBlockFocus()
         selectIndex.value = -1
     }
 
-    const blockMousedwn = (e, block, idx) => {
+    const blockMousedown = (e, block, idx) => {
+        if(previewRef.value) return
         e.stopPropagation()
         e.preventDefault()
         // block上我们规划一个属性，focus 获取焦点后就将focus变为true
@@ -46,7 +52,8 @@ export function useBlockFocus (data, callback) {
 
     return {
         clearBlockFocus,
-        blockMousedwn,
+        containerMousedown,
+        blockMousedown,
         foucsData,
         laseSelectBlock
     }

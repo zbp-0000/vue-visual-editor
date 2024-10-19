@@ -1,13 +1,16 @@
-import { computed, defineComponent, inject, ref, watch } from "vue";
-import { 
-    RollbackOutlined, 
-    RetweetOutlined, 
-    CloudUploadOutlined, 
-    CloudDownloadOutlined, 
-    VerticalAlignTopOutlined, 
+import { computed, defineComponent, inject, ref } from "vue";
+import {
+    RollbackOutlined,
+    RetweetOutlined,
+    CloudUploadOutlined,
+    CloudDownloadOutlined,
+    VerticalAlignTopOutlined,
     VerticalAlignBottomOutlined,
-    DeleteOutlined
+    DeleteOutlined,
+    FormOutlined,
+    EyeOutlined
 } from '@ant-design/icons-vue';
+import { ElButton } from 'element-plus'
 
 import "./editor.scss";
 import EditorBlock from './editor-block'
@@ -23,6 +26,8 @@ export default defineComponent({
     },
     emits: ["update:state"],
     setup (props, ctx) {
+        const previewRef = ref(false) // 预览的时候，内容不能在操作了，可以点击
+        const editorRef = ref(true) // 编辑状态
         const data = computed({
             get: () => props.state,
             set: (newVal) => ctx.emit("update:state", newVal)
@@ -40,7 +45,7 @@ export default defineComponent({
         const { handleDragstart, handleDragEnd } = useMenuDrag(containerRef, data)
 
         // 实现组件聚焦
-        const { blockMousedwn, clearBlockFocus, foucsData, laseSelectBlock } = useBlockFocus(data, (e) => {
+        const { blockMousedown, clearBlockFocus, containerMousedown, foucsData, laseSelectBlock } = useBlockFocus(data, previewRef, (e) => {
             mouseDown(e)
         })
 
@@ -51,17 +56,17 @@ export default defineComponent({
         const buttons = [
             {
                 label: '撤销',
-                icon: <RollbackOutlined style={{ fontSize: '20px' }} />,
+                icon: <RollbackOutlined />,
                 handler: () => commands.undo()
             },
             {
                 label: '重做',
-                icon: <RetweetOutlined style={{ fontSize: '20px' }} />,
+                icon: <RetweetOutlined />,
                 handler: () => commands.redo()
             },
             {
                 label: '导出',
-                icon: <CloudUploadOutlined style={{ fontSize: '20px' }} />,
+                icon: <CloudUploadOutlined />,
                 handler: () => {
                     $dialog({
                         title: '导出json使用',
@@ -71,13 +76,13 @@ export default defineComponent({
             },
             {
                 label: '导入',
-                icon: <CloudDownloadOutlined style={{ fontSize: '20px' }} />,
+                icon: <CloudDownloadOutlined />,
                 handler: () => {
                     $dialog({
                         title: '导入json使用',
                         content: '',
                         footer: true,
-                        onConfirm(text) {
+                        onConfirm (text) {
                             // data.value = JSON.parse(text) // 这样去更改无法保留历史记录
                             commands.updateContainer(JSON.parse(text))
                         }
@@ -86,23 +91,51 @@ export default defineComponent({
             },
             {
                 label: '置顶',
-                icon: <VerticalAlignTopOutlined style={{ fontSize: '20px' }} />,
+                icon: <VerticalAlignTopOutlined />,
                 handler: () => commands.placeTop()
             },
             {
                 label: '置底',
-                icon: <VerticalAlignBottomOutlined style={{ fontSize: '20px' }} />,
+                icon: <VerticalAlignBottomOutlined />,
                 handler: () => commands.placeBottom()
             },
             {
                 label: '删除',
-                icon: <DeleteOutlined style={{ fontSize: '20px' }} />,
+                icon: <DeleteOutlined />,
                 handler: () => commands.delete()
+            },
+            {
+                label: () => previewRef.value ? '编辑' : '预览',
+                icon: () => previewRef.value ? <FormOutlined /> : <EyeOutlined />,
+                handler: () => {
+                    previewRef.value = !previewRef.value;
+                    clearBlockFocus()
+                }
+            },
+            {
+                label: '关闭',
+                icon: <DeleteOutlined />,
+                handler: () => {
+                    editorRef.value = false
+                    clearBlockFocus()
+                }
             }
         ]
 
 
-        return () => (
+        return () => !editorRef.value ? <>
+            <div className="editor-container-content_canvas"
+                style={containerStyle}
+            >
+                {data.value.blocks.map((block, index) => (
+                    <EditorBlock
+                        block={block}
+                        class="editor-block-no-editor"
+                    />
+                ))}
+            </div>
+            <div> <ElButton type="primary" onClick={() => editorRef.value = true} >继续编辑</ElButton> </div>
+        </> : (
             <div className="editor">
                 <div className="editor-left">
                     <div className="editor-left-content">
@@ -120,12 +153,14 @@ export default defineComponent({
                     </div>
                 </div>
                 <div className="editor-top">
-                    {buttons.map((btn) => (
-                        <div onClick={btn.handler} className="editor-top-button">
-                            {btn.icon}
-                            <span>{btn.label}</span>
+                    {buttons.map((btn) => {
+                        const icon = typeof btn.icon === 'function' ? btn.icon() : btn.icon
+                        const label = typeof btn.label === 'function' ? btn.label() : btn.label
+                        return <div onClick={btn.handler} className="editor-top-button">
+                            {icon}
+                            <span>{label}</span>
                         </div>
-                    ))}
+                    })}
                 </div>
                 <div className="editor-right">属性控制栏</div>
                 <div className="editor-container">
@@ -135,13 +170,14 @@ export default defineComponent({
                         <div className="editor-container-content_canvas"
                             style={containerStyle}
                             ref={containerRef}
-                            onMousedown={clearBlockFocus}
+                            onMousedown={containerMousedown}
                         >
                             {data.value.blocks.map((block, index) => (
                                 <EditorBlock
                                     block={block}
-                                    onMousedown={e => blockMousedwn(e, block, index)}
-                                    class={block.focus ? 'editor-block-focus' : ''} />
+                                    onMousedown={e => blockMousedown(e, block, index)}
+                                    class={[block.focus ? 'editor-block-focus' : '', previewRef.value ? 'editor-block-no-editor' : '']}
+                                />
                             ))}
                             {markLine.value.x !== null && <div className="line-x" style={{ left: markLine.value.x + 'px' }}></div>}
                             {markLine.value.y !== null && <div className="line-y" style={{ top: markLine.value.y + 'px' }}></div>}

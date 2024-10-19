@@ -110,6 +110,12 @@
     }
 }
 
+.editor-block-no-editor {
+    &::before {
+        display: none;
+    }
+}
+
 .line-x {
     position: absolute;
     top: 0;
