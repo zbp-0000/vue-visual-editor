@@ -19,6 +19,7 @@ import { useBlockFocus } from './useBlockFocus'
 import { useBlockDrag } from "./useBlockDrag";
 import { useCommand } from "./useCommand";
 import { $dialog } from "@/components/Dialog.jsx";
+import { $dropdown } from "@/components/Dropdown.jsx";
 
 export default defineComponent({
     props: {
@@ -122,6 +123,13 @@ export default defineComponent({
             }
         ]
 
+        const onContextmenuBlock = (e, block) => {
+            e.preventDefault()
+            $dropdown({
+                el: e.target, // 以哪个元素为主，以产生dropdown
+            })
+        }
+
 
         return () => !editorRef.value ? <>
             <div className="editor-container-content_canvas"
@@ -177,6 +185,7 @@ export default defineComponent({
                                     block={block}
                                     onMousedown={e => blockMousedown(e, block, index)}
                                     class={[block.focus ? 'editor-block-focus' : '', previewRef.value ? 'editor-block-no-editor' : '']}
+                                    onContextmenu={e => onContextmenuBlock(e, block)}
                                 />
                             ))}
                             {markLine.value.x !== null && <div className="line-x" style={{ left: markLine.value.x + 'px' }}></div>}
