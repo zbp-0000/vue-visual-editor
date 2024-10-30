@@ -1,6 +1,22 @@
 import { computed, createVNode, defineComponent, onMounted, reactive, render, ref, onBeforeUnmount } from "vue";
 
-
+export const DropdownItem = defineComponent({
+    props: {
+        label: String,
+        icon: Object
+    },
+    setup(props, ctx) {
+        const {label, icon} = props
+        const {slots} = ctx
+        const handleClick = () => {
+            ctx.emit('click', props.item)
+        }
+        return () => <div class="dropdown-item" onClick={handleClick}>
+            <i>{slots.default()}</i>
+            <span>{label}</span>
+        </div>
+    }
+})
 const DropdownComponent = defineComponent({
     prpps: {
         option: {
@@ -9,7 +25,7 @@ const DropdownComponent = defineComponent({
     },
     setup(props, ctx) {
         const state = reactive({
-            option: props.option || {title: ''},
+            option: props.option || {title: '', content: () => {}},
             isShow: false,
             top: 0,
             left: 0
@@ -51,12 +67,12 @@ const DropdownComponent = defineComponent({
             document.addEventListener('mousedown', onMousedownDocument, true)
         })
         onBeforeUnmount(() => {
-            document.removeEventListener('mousedown', onMousedownDocument, true)
+            document.removeEventListener('mousedown', onMousedownDocument)
         })
 
         return () => {
-
-            return <div class={classes.value} style={styles.value} ref={el}>下拉菜单内容区</div>
+            console.log("state.option",state.option);
+            return <div class={classes.value} style={styles.value} ref={el}>{state.option.content()}</div>
         }
     }
 })

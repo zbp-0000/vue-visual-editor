@@ -20,6 +20,7 @@ import { useBlockDrag } from "./useBlockDrag";
 import { useCommand } from "./useCommand";
 import { $dialog } from "@/components/Dialog.jsx";
 import { $dropdown } from "@/components/Dropdown.jsx";
+import {DropdownItem} from "@/components/Dropdown.jsx";
 
 export default defineComponent({
     props: {
@@ -127,6 +128,15 @@ export default defineComponent({
             e.preventDefault()
             $dropdown({
                 el: e.target, // 以哪个元素为主，以产生dropdown
+                content: () => {
+                    return <>
+                        <DropdownItem label="删除" onClick={() => console.log("111",111)}><DeleteOutlined /></DropdownItem>
+                        <DropdownItem label="置顶" onClick={() => console.log("111",111)}><VerticalAlignTopOutlined /></DropdownItem>
+                        <DropdownItem label="置底" onClick={() => console.log("111",111)}><VerticalAlignBottomOutlined /></DropdownItem>
+                        <DropdownItem label="查看" onClick={() => console.log("111",111)}><EyeOutlined /></DropdownItem>
+                        <DropdownItem label="导入" onClick={() => console.log("111",111)}><CloudDownloadOutlined /></DropdownItem>
+                    </>
+                }
             })
         }
 
