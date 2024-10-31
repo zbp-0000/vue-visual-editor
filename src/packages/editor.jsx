@@ -130,11 +130,26 @@ export default defineComponent({
                 el: e.target, // 以哪个元素为主，以产生dropdown
                 content: () => {
                     return <>
-                        <DropdownItem label="删除" onClick={() => console.log("111",111)}><DeleteOutlined /></DropdownItem>
-                        <DropdownItem label="置顶" onClick={() => console.log("111",111)}><VerticalAlignTopOutlined /></DropdownItem>
-                        <DropdownItem label="置底" onClick={() => console.log("111",111)}><VerticalAlignBottomOutlined /></DropdownItem>
-                        <DropdownItem label="查看" onClick={() => console.log("111",111)}><EyeOutlined /></DropdownItem>
-                        <DropdownItem label="导入" onClick={() => console.log("111",111)}><CloudDownloadOutlined /></DropdownItem>
+                        <DropdownItem label="删除" onClick={() => commands.delete()}><DeleteOutlined /></DropdownItem>
+                        <DropdownItem label="置顶" onClick={() => commands.placeTop()}><VerticalAlignTopOutlined /></DropdownItem>
+                        <DropdownItem label="置底" onClick={() => commands.placeBottom()}><VerticalAlignBottomOutlined /></DropdownItem>
+                        <DropdownItem label="查看" onClick={() => {
+                            $dialog({
+                                title: '查看节点数据',
+                                content: JSON.stringify(block)
+                            })
+                        }}><EyeOutlined /></DropdownItem>
+                        <DropdownItem label="导入" onClick={() => {
+                            $dialog({
+                                title: '导入节点数据',
+                                content: '',
+                                footer: true,
+                                onConfirm (text) {
+                                    text = JSON.parse(text)
+                                    commands.updateBlock(text, block)
+                                }
+                            })
+                        }}><CloudDownloadOutlined /></DropdownItem>
                     </>
                 }
             })

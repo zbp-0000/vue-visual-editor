@@ -1,17 +1,17 @@
-import { computed, createVNode, defineComponent, onMounted, reactive, render, ref, onBeforeUnmount } from "vue";
+import { computed, createVNode, defineComponent, onMounted, reactive, render, ref, onBeforeUnmount, provide, inject } from "vue";
 
 export const DropdownItem = defineComponent({
     props: {
-        label: String,
-        icon: Object
+        label: String
     },
     setup(props, ctx) {
-        const {label, icon} = props
+        let hide = inject('hide')
+        const {label} = props
         const {slots} = ctx
         const handleClick = () => {
             ctx.emit('click', props.item)
         }
-        return () => <div class="dropdown-item" onClick={handleClick}>
+        return () => <div class="dropdown-item" onClick={hide}>
             <i>{slots.default()}</i>
             <span>{label}</span>
         </div>
@@ -41,6 +41,8 @@ const DropdownComponent = defineComponent({
                 state.left = left
             }
         })
+
+        provide('hide', () => state.isShow = false)
 
         const classes = computed(() => ['dropdown', {
             'dropdown-isShow': state.isShow
