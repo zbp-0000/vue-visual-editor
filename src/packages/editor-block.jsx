@@ -26,7 +26,11 @@ export default defineComponent({
         })
         return () => {
             const component = config.componentMap[props.block.key]
-            return <div style={blockStyle.value} class="editor-block" ref={blockRef}>{component.render()}</div>
+            // 获取render函数
+            const RenderComponent = component.render({
+                props: props.block.props
+            })
+            return <div style={blockStyle.value} class="editor-block" ref={blockRef}>{RenderComponent}</div>
         }
     }
 })

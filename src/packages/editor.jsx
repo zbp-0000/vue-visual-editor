@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref } from "vue";
+import {computed, defineComponent, inject, ref, watch} from "vue";
 import {
     RollbackOutlined,
     RetweetOutlined,
@@ -21,6 +21,7 @@ import { useCommand } from "./useCommand";
 import { $dialog } from "@/components/Dialog.jsx";
 import { $dropdown } from "@/components/Dropdown.jsx";
 import {DropdownItem} from "@/components/Dropdown.jsx";
+import EditorOperator from "@/components/editor-operator.jsx";
 
 export default defineComponent({
     props: {
@@ -195,7 +196,14 @@ export default defineComponent({
                         </div>
                     })}
                 </div>
-                <div className="editor-right">属性控制栏</div>
+                <div className="editor-right">
+                    <EditorOperator
+                        block={laseSelectBlock.value}
+                        data={data.value}
+                        updateContainer={commands.updateContainer}
+                        updateBlock={commands.updateBlock}
+                    ></EditorOperator>
+                </div>
                 <div className="editor-container">
                     {/* 负责产生滚动条 */}
                     <div className="editor-container-content">

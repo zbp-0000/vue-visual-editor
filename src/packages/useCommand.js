@@ -218,7 +218,7 @@ export function useCommand(data, foucsData) {
     })()
 
     registry({
-        name: 'updateBlock',
+        name: 'updateBlock', // 更新某个组件
         pushQueue: true,
         execute(newBlock, oldBlock) {
             let state = {
