@@ -18,7 +18,7 @@ export default defineComponent({
             if (!props.block) { // 说明要绑定的是容器的宽度和高度
                 state.editData = cloneDeep(props.data.container)
             } else {
-                state.editData = newBlock
+                state.editData = JSON.parse(JSON.stringify(props.block))
             }
         }
         const apply = () => {

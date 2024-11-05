@@ -21,7 +21,7 @@ import { useCommand } from "./useCommand";
 import { $dialog } from "@/components/Dialog.jsx";
 import { $dropdown } from "@/components/Dropdown.jsx";
 import {DropdownItem} from "@/components/Dropdown.jsx";
-import EditorOperator from "@/components/editor-operator.jsx";
+import EditorOperator from "@/packages/editor-operator.jsx";
 
 export default defineComponent({
     props: {
