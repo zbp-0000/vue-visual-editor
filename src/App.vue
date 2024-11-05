@@ -7,7 +7,9 @@ let state = ref(data)
 provide('config', config)
 const formData = ref({
   username: 'zs',
-  password: 123
+  password: 123,
+  start: 10,
+  end: 100
 })
 </script>
 

@@ -1,5 +1,5 @@
 import { ElInput,ElButton } from 'element-plus'
-
+import Range from '@/components/Range.jsx'
 /**
  * 定义一个 editorConfig 函数 来增加可拖拽组件
  * 并且返回出去 让外面可以拿到
@@ -72,5 +72,20 @@ editorConfig.registrer({
     key: 'input',
     model: {
         default: '绑定字段'
+    }
+})
+editorConfig.registrer({
+    label: '范围选择器',
+    preview: () => <Range placeholder='预览范围选择器'></Range>,
+    render: ({model}) => <Range {...{
+        start: model.start.modelValue,
+        'onUpdate:start': model.start['onUpdate:modelValue'],
+        end: model.end.modelValue,
+        'onUpdate:end': model.end['onUpdate:modelValue']
+    }}></Range>,
+    key: 'range',
+    model: {
+        start: '开始范围字段',
+        end: '结束范围字段'
     }
 })
