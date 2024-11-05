@@ -1,8 +1,8 @@
-import { computed, ref } from 'vue'
+import {computed, ref, watch} from 'vue'
 /**
  * 获取哪些对象被选中了
  * @param {Object} data 已有的菜单数据
- * @param {callback} callback 回调函数 
+ * @param {Function} callback 回调函数
  */
 export function useBlockFocus (data, previewRef, callback) {
     const selectIndex = ref(-1) // 当前被选中的block的索引

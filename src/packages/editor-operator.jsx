@@ -18,19 +18,17 @@ export default defineComponent({
             if (!props.block) { // 说明要绑定的是容器的宽度和高度
                 state.editData = cloneDeep(props.data.container)
             } else {
-                state.editData = JSON.parse(JSON.stringify(props.block))
+                state.editData = cloneDeep(props.block)
             }
         }
         const apply = () => {
             if (!props.block) { // 更改组件容器的大小
                 props.updateContainer({ ...props.data, container: state.editData })
             } else { // 更改组件的位置
-                console.log("state.editData", state.editData);
-                console.log("props.block", props.block);
                 props.updateBlock(state.editData, props.block)
             }
         }
-        watch(() => props.block, reset, { immediate: true })
+        watch(() => props.block, reset, { immediate: true, deep: true })
         return () => {
             let content = []
             if (!props.block) {

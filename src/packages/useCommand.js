@@ -117,6 +117,31 @@ export function useCommand (data, foucsData) {
         }
     })
     registry({
+        name: 'updateBlock', // 更新某个组件
+        pushQueue: true,
+        execute (newBlock, oldBlock) {
+            let state = {
+                before: data.value.blocks,
+                after: (() => {
+                    let blocks = [...data.value.blocks] // 拷贝一份用于新的block
+                    const index = data.value.blocks.indexOf(oldBlock) // 找到老的 需要通过老的查找
+                    if (index > -1) {
+                        blocks.splice(index, 1, newBlock)
+                    }
+                    return blocks
+                })()
+            }
+            return {
+                redo: () => {
+                    data.value = { ...data.value, blocks: state.after }
+                },
+                undo: () => {
+                    data.value = { ...data.value, blocks: state.before }
+                }
+            }
+        }
+    })
+    registry({
         name: 'placeTop',
         pushQueue: true,
         execute () {
@@ -217,34 +242,7 @@ export function useCommand (data, foucsData) {
         return init
     })()
 
-    registry({
-        name: 'updateBlock', // 更新某个组件
-        pushQueue: true,
-        execute (newBlock, oldBlock) {
-            console.log('新的=',newBlock);
-            console.log('旧的=',oldBlock);
-            let state = {
-                before: data.value.blocks,
-                after: (() => {
-                    let blocks = [...data.value.blocks] // 拷贝一份用于新的block
-                    const index = data.value.blocks.indexOf(oldBlock) // 找到老的 需要通过老的查找
-                    if (index > -1) {
-                        blocks.splice(index, 1, newBlock)
-                    }
-                    return blocks
-                })()
-            }
-            console.log('updateBlock=', state);
-            return {
-                redo: () => {
-                    data.value = { ...data.value, blocks: state.after }
-                },
-                undo: () => {
-                    data.value = { ...data.value, blocks: state.before }
-                }
-            }
-        }
-    })
+
 
         // 判断哪些有初始化init函数，init函数会返回销毁函数，把销毁函数存起来
         ; (() => {
