@@ -47,7 +47,8 @@ export function useMenuDrag (containerRef, data) {
                     zIndex: 1,
                     key: currentComponent.key,
                     alignCenter: true,
-                    props: {}
+                    props: {},
+                    model: {}
                 }]
         }
 

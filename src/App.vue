@@ -5,11 +5,15 @@ import Editor from './packages/editor.jsx'
 import {editorConfig as config} from './utils/editor-config.jsx'
 let state = ref(data)
 provide('config', config)
+const formData = ref({
+  username: 'zs',
+  password: 123
+})
 </script>
 
 <template>
   <div class="app">
-    <Editor v-model:state="state" />
+    <Editor v-model:state="state" :formData="formData" />
   </div>
 </template>
 

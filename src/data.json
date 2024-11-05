@@ -14,6 +14,6 @@
             "type": "primary",
             "size": "small"
         }},
-        {"top": 300, "left": 300, "zIndex": 1, "key": "input", "props":  {}}
+        {"top": 300, "left": 300, "zIndex": 1, "key": "input", "props":  {}, "model":  {}}
     ]
 }

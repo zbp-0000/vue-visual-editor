@@ -2,7 +2,8 @@ import { computed, defineComponent,inject, onMounted, ref, watch } from "vue";
 // 画布区域 每个单独的组件
 export default defineComponent({
     props: {
-        block: {type: Object}
+        block: {type: Object},
+        formData: {type: Object}
     },
     setup(props) {
         const config = inject('config')
@@ -28,7 +29,15 @@ export default defineComponent({
             const component = config.componentMap[props.block.key]
             // 获取render函数
             const RenderComponent = component.render({
-                props: props.block.props
+                props: props.block.props,
+                model: Object.keys(component.model || {}).reduce((prev, modelName) => {
+                    let propName = props.block.model[modelName]
+                    prev[modelName] = {
+                        modelValue: props.formData[propName],
+                        "onUpdate:modelValue": v => props.formData[propName] = v
+                    }
+                    return prev
+                }, {})
             })
             return <div style={blockStyle.value} class="editor-block" ref={blockRef}>{RenderComponent}</div>
         }

@@ -25,7 +25,8 @@ import EditorOperator from "@/packages/editor-operator.jsx";
 
 export default defineComponent({
     props: {
-        state: { type: Object }
+        state: { type: Object },
+        formData: { type: Object }
     },
     emits: ["update:state"],
     setup (props, ctx) {
@@ -165,6 +166,7 @@ export default defineComponent({
                     <EditorBlock
                         block={block}
                         class="editor-block-no-editor"
+                        formData={props.formData}
                     />
                 ))}
             </div>
@@ -219,6 +221,7 @@ export default defineComponent({
                                     onMousedown={e => blockMousedown(e, block, index)}
                                     class={[block.focus ? 'editor-block-focus' : '', previewRef.value ? 'editor-block-no-editor' : '']}
                                     onContextmenu={e => onContextmenuBlock(e, block)}
+                                    formData={props.formData}
                                 />
                             ))}
                             {markLine.value.x !== null && <div className="line-x" style={{ left: markLine.value.x + 'px' }}></div>}

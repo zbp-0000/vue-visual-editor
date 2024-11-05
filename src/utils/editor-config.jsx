@@ -68,6 +68,9 @@ editorConfig.registrer({
 editorConfig.registrer({
     label: '输入框',
     preview: () => <ElInput placeholder='预览输入框' />,
-    render: () => <ElInput placeholder='渲染输入框' />,
-    key: 'input'
+    render: ({model}) => <ElInput placeholder='渲染输入框' {...model.default} />,
+    key: 'input',
+    model: {
+        default: '绑定字段'
+    }
 })
