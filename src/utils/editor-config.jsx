@@ -1,4 +1,4 @@
-import { ElInput,ElButton } from 'element-plus'
+import { ElInput,ElButton,ElSelect, ElOption } from 'element-plus'
 import Range from '@/components/Range.jsx'
 /**
  * 定义一个 editorConfig 函数 来增加可拖拽组件
@@ -27,6 +27,29 @@ const createInputProp = (label) => ({type: 'input', label})
 const createColorProp = (label) => ({type: 'color', label})
 /*选择器 工厂函数*/
 const createSelectProp = (label, options) => ({type: 'select', label, options})
+/*下拉框 工厂函数*/
+const createTableProp = (label,table) => ({type: 'table', label,table})
+
+editorConfig.registrer({
+    label: '下拉框',
+    preview: () => <ElSelect style="width: 120px">预览下拉框</ElSelect>,
+    render: ({props, model}) => <ElSelect {...model.default} style="width: 120px">
+        {(props.options || []).map((item, index) => <ElOption label={item.label} value={item.value} key={index}></ElOption>)}
+    </ElSelect>,
+    key: 'select',
+    props: {
+        options: createTableProp('下拉选项', {
+            options: [
+                {label: '显示值', filed: 'label'},
+                {label: '绑定值', filed: 'value'}
+            ],
+            key: 'label', // 显示给用户的值，是label
+        })
+    },
+    model: {
+        default: '绑定字段'
+    }
+})
 
 editorConfig.registrer({
     label: '文本',

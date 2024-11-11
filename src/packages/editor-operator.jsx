@@ -1,6 +1,7 @@
 import { defineComponent, inject, reactive, watch } from "vue";
 import { ElForm, ElFormItem, ElButton, ElInputNumber, ElInput, ElColorPicker, ElSelect, ElOption } from "element-plus";
 import { cloneDeep } from "lodash";
+import TableEditor from "@/packages/table-editor.jsx";
 
 export default defineComponent({
     props: {
@@ -51,6 +52,7 @@ export default defineComponent({
                                 select: () => <ElSelect v-model={state.editData.props[propName]}>
                                     {propConfig.options.map(item => <ElOption label={item.label} value={item.value}></ElOption>)}
                                 </ElSelect>,
+                                table: () => <TableEditor propConfig={propConfig} v-model={state.editData.props[propName]}></TableEditor>
                             }[propConfig.type]()}
                         </ElFormItem>
                     })
