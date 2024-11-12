@@ -1,4 +1,5 @@
 import { computed, defineComponent,inject, onMounted, ref, watch } from "vue";
+import BlockResize from "@/packages/block-resize.jsx";
 // 画布区域 每个单独的组件
 export default defineComponent({
     props: {
@@ -29,6 +30,7 @@ export default defineComponent({
             const component = config.componentMap[props.block.key]
             // 获取render函数
             const RenderComponent = component.render({
+                size: props.block.hasResize ? {width: props.block.width,height: props.block.height} : {},
                 props: props.block.props,
                 model: Object.keys(component.model || {}).reduce((prev, modelName) => {
                     let propName = props.block.model[modelName]
@@ -39,7 +41,11 @@ export default defineComponent({
                     return prev
                 }, {})
             })
-            return <div style={blockStyle.value} class="editor-block" ref={blockRef}>{RenderComponent}</div>
+            const {width, height} = component.resize || {}
+            return <div style={blockStyle.value} class="editor-block" ref={blockRef}>
+                {RenderComponent}
+                {props.block.focus && (width || height) && <BlockResize block={props.block} component={component} />}
+            </div>
         }
     }
 })

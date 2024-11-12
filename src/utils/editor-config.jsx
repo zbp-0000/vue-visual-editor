@@ -68,8 +68,12 @@ editorConfig.registrer({
 })
 editorConfig.registrer({
     label: '按钮',
+    resize: {
+        width: true, // 可以更改宽度
+        height: true // 可以更改高度
+    },
     preview: () => <ElButton>预览按钮</ElButton>,
-    render: ({props}) => <ElButton type={props.type} size={props.size}>{props.text || '渲染按钮'}</ElButton>,
+    render: ({props, size}) => <ElButton style={{height:size.height+'px', width:size.width+'px'}} type={props.type} size={props.size}>{props.text || '渲染按钮'}</ElButton>,
     key: 'button',
     props: {
         text: createInputProp('按钮内容'),
@@ -90,8 +94,11 @@ editorConfig.registrer({
 })
 editorConfig.registrer({
     label: '输入框',
+    resize: {
+        width: true, // 可以更改宽度
+    },
     preview: () => <ElInput placeholder='预览输入框' />,
-    render: ({model}) => <ElInput placeholder='渲染输入框' {...model.default} />,
+    render: ({model,size}) => <ElInput style={{ width:size.width+'px'}} placeholder='渲染输入框' {...model.default} />,
     key: 'input',
     model: {
         default: '绑定字段'
